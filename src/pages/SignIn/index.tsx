@@ -17,6 +17,7 @@ import * as Yup from 'yup';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import getValidationError from '../../utils/getValidationError';
+import { useAuth } from '../../hooks/auth';
 
 import {
   Container,
@@ -28,10 +29,16 @@ import {
 } from './styles';
 import logoImg from '../../assets/logo.png';
 
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
   const passwordInputRef = useRef<TextInput>(null);
+  const { signIn } = useAuth();
 
   const handleSubmit = useCallback(async (data: SignInFormData) => {
     try {
@@ -48,7 +55,7 @@ const SignIn: React.FC = () => {
         abortEarly: false,
       });
 
-      // await signIn(data);
+      await signIn(data);
 
       // history.push('/dashboard');
     } catch (error) {
