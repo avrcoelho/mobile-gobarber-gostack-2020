@@ -17,6 +17,7 @@ import getValidationError from '../../utils/getValidationError';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import api from '../../services/api';
 
 import { Container, Title, BackToSignIn, BackToSignInText } from './styles';
 import logoImg from '../../assets/logo.png';
@@ -42,6 +43,15 @@ const SignUp: React.FC = () => {
       await schema.validate(data, {
         abortEarly: false,
       });
+
+      await api.post('/users', data);
+
+      Alert.alert(
+        'Cadastro realizado com sucesso',
+        'Você ja pode fazer logon na aplicação',
+      );
+
+      navigation.goBack();
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         const errors = getValidationError(error);
