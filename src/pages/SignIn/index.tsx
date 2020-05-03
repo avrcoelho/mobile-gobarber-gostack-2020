@@ -40,38 +40,41 @@ const SignIn: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   const { signIn } = useAuth();
 
-  const handleSubmit = useCallback(async (data: SignInFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleSubmit = useCallback(
+    async (data: SignInFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        email: Yup.string()
-          .required('E-mail obrigatório')
-          .email('E-mail inválido'),
-        password: Yup.string().required('Senha obrigatória'),
-      });
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('E-mail obrigatório')
+            .email('E-mail inválido'),
+          password: Yup.string().required('Senha obrigatória'),
+        });
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      await signIn(data);
+        await signIn(data);
 
-      // history.push('/dashboard');
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const errors = getValidationError(error);
+        // history.push('/dashboard');
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationError(error);
 
-        formRef.current?.setErrors(errors);
+          formRef.current?.setErrors(errors);
 
-        return;
+          return;
+        }
+        Alert.alert(
+          'Erro na autenticação',
+          'Ocorreu um erro ao fazer login, cheque as credenciais',
+        );
       }
-      Alert.alert(
-        'Erro na autenticação',
-        'Ocorreu um erro ao fazer login, cheque as credenciais',
-      );
-    }
-  }, []);
+    },
+    [signIn],
+  );
 
   return (
     <>
